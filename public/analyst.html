@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FraudShield-Pro Engine — Bank Analyst SOC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="analyst.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style>
+    /* AUTH SCREEN MATCHING LANDING PAGE */
+    .auth-page {
+      min-height: 100vh;
+      width: 100%;
+      background-color: #f8fafc;
+      background-image: radial-gradient(#cbd5e1 0.75px, transparent 0.75px);
+      background-size: 24px 24px;
+      color: #0f172a;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .auth-topbar {
+      width: 100%;
+      padding: 24px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: #0f172a;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.28rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #0f172a;
+    }
+
+    .brand-title span {
+      color: #047857;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .guide-btn {
+      background: #ffffff;
+      color: #0f172a;
+      border: 1.5px solid #cbd5e1;
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .guide-btn:hover {
+      background: #0f172a;
+      color: #ffffff;
+      border-color: #0f172a;
+    }
+
+    .auth-split {
+      flex: 1;
+      max-width: 1080px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px 28px 64px;
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      gap: 56px;
+      align-items: center;
+    }
+
+    .portal-kicker {
+      display: inline-block;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #475569;
+      margin-bottom: 10px;
+    }
+
+    .auth-info h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 3.4vw, 2.7rem);
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      line-height: 1.12;
+      color: #047857;
+      margin-bottom: 12px;
+    }
+
+    .auth-quote {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: 1.08rem;
+      color: #047857;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .auth-info > p.auth-desc {
+      font-size: 0.94rem;
+      color: #475569;
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+
+    .auth-points {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .auth-points li {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 0.86rem;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    .auth-points li strong {
+      display: block;
+      font-family: 'Space Grotesk', sans-serif;
+      color: #0f172a;
+      font-size: 0.92rem;
+      margin-bottom: 2px;
+    }
+
+    .auth-box {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 20px;
+      padding: 36px;
+      width: 100%;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+    }
+
+    .auth-box h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+
+    .auth-box .sub {
+      font-size: 0.88rem;
+      color: #475569;
+      margin-bottom: 22px;
+    }
+
+    .auth-box .tabs {
+      display: flex;
+      background: #f1f5f9;
+      padding: 4px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+    }
+
+    .auth-box .tab {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: #475569;
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.84rem;
+      cursor: pointer;
+    }
+
+    .auth-box .tab.active {
+      background: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+    }
+
+    .auth-box .field {
+      margin-bottom: 16px;
+    }
+
+    .auth-box .field label {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .auth-box .field input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      color: #0f172a;
+      background: #ffffff;
+      transition: border-color 0.15s ease;
+    }
+
+    .auth-box .field input:focus {
+      outline: none;
+      border-color: #0f172a;
+    }
+
+    .pass-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .pass-wrap input {
+      padding-right: 44px;
+    }
+
+    .pass-toggle {
+      position: absolute;
+      right: 12px;
+      background: transparent;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pass-toggle:hover {
+      color: #0f172a;
+    }
+
+    .auth-box .btn-soc-submit {
+      width: 100%;
+      padding: 13px 18px;
+      font-size: 0.94rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 999px;
+      background: #0f172a;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .auth-box .btn-soc-submit:hover { opacity: 0.92; }
+
+    .auth-footer-link {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid #f1f5f9;
+      font-size: 0.84rem;
+      text-align: center;
+    }
+
+    .auth-footer-link a {
+      color: #475569;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .auth-footer-link a:hover {
+      color: #0f172a;
+    }
+
+    /* INFO MODALS */
+    .info-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .info-backdrop.open { display: flex; }
+
+    .guide-modal {
+      background: #ffffff;
+      border-radius: 20px;
+      max-width: 700px;
+      width: 100%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+    }
+
+    .modal-header {
+      padding: 20px 26px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-header h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      color: #000000;
+    }
+
+    .close-btn {
+      background: #f1f5f9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.15rem;
+      color: #0f172a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-body {
+      padding: 22px 26px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .engine-highlight {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 16px 18px;
+      color: #000000;
+      font-size: 0.87rem;
+      line-height: 1.6;
+    }
+
+    .guide-step {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 15px 18px;
+    }
+
+    .step-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .step-num {
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    .step-title {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: #000000;
+    }
+
+    .guide-step p {
+      font-size: 0.84rem;
+      color: #000000;
+      line-height: 1.55;
+    }
+
+    .guide-step code {
+      background: #e2e8f0;
+      color: #0f172a;
+      padding: 1px 6px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+    }
+
+    .modal-footer {
+      padding: 16px 26px;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    @media (max-width: 880px) {
+      .auth-topbar { padding: 18px 20px; }
+      .auth-split { grid-template-columns: 1fr; gap: 28px; padding: 12px 20px 44px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ANALYST AUTH -->
+  <div id="authSection" class="auth-page">
+    <header class="auth-topbar">
+      <a href="/" class="brand-logo">
+        <div class="brand-mark">FS</div>
+        <span class="brand-title">FraudShield-Pro <span>Engine</span></span>
+      </a>
+      <div class="topbar-actions">
+        <button type="button" id="openEngineBtn" class="guide-btn">Know About FS Engine</button>
+        <button type="button" id="openGuideBtn" class="guide-btn">Know How to Test</button>
+      </div>
+    </header>
+
+    <div class="auth-split">
+      <div class="auth-info">
+        <span class="portal-kicker">Core Engine • Security Operations Center</span>
+        <h2>Bank Analyst SOC Portal</h2>
+        <p class="auth-quote">
+          “Total visibility into every risk score, linked fraud ring, and case verdict.”
+        </p>
+        <p class="auth-desc">
+          The central command console for FraudShield-Pro Engine. Monitor live transaction risk verdicts, uncover coordinated fraud rings, and resolve flagged cases in real time.
+        </p>
+        <ul class="auth-points">
+          <li>
+            <strong>Fraud Network Graph</strong>
+            Visualize linked accounts, shared devices, money mules, and circular transfer loops.
+          </li>
+          <li>
+            <strong>ATO &amp; Device Intelligence</strong>
+            Track device reputation scores, failed login bursts, and apply manual trust overrides.
+          </li>
+          <li>
+            <strong>AI Investigator (XAI) &amp; SAR Export</strong>
+            Inspect SHAP-style risk breakdowns, resolve cases, and download compliance SAR reports.
+          </li>
+        </ul>
+      </div>
+
+      <div class="auth-box">
+        <h1>Analyst SOC Login</h1>
+        <p class="sub">Authorized Fraud Operations personnel only.</p>
+        <div class="tabs">
+          <button id="tabLogin" class="tab active">Analyst Login</button>
+          <button id="tabRegister" class="tab">Register Analyst</button>
+        </div>
+        <form id="authForm">
+          <div id="nameWrap" class="field hidden">
+            <label>Full Name</label>
+            <input type="text" id="authName" placeholder="e.g., Abhijeet Tewary" />
+          </div>
+          <div class="field">
+            <label>Work Email</label>
+            <input type="email" id="authEmail" placeholder="analyst@bank.com" required />
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <div class="pass-wrap">
+              <input type="password" id="authPassword" placeholder="Minimum 6 characters" required />
+              <button type="button" class="pass-toggle" id="toggleAuthPass" aria-label="Show password">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <p id="authError" class="error-msg hidden"></p>
+          <button type="submit" id="authBtn" class="btn-soc-submit">Sign In to SOC</button>
+        </form>
+        <div class="auth-footer-link">
+          <a href="/">← Switch Portal</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANALYST SOC SHELL (LIGHT THEME) -->
+  <div id="appSection" class="shell hidden">
+    <aside class="sidebar">
+      <div>
+        <a href="/" class="sidebar-logo">
+          <div class="brand-mark">FS</div>
+          <span class="brand-title">FraudShield-Pro <span>Engine</span></span>
+        </a>
+        <div class="brand-sub">Analyst SOC</div>
+        <button class="nav-btn active" data-view="overview">Overview & Analytics</button>
+        <button class="nav-btn" data-view="investigator">AI Investigator (XAI)</button>
+        <button class="nav-btn" data-view="graph">Fraud Network Graph</button>
+        <button class="nav-btn" data-view="ato">ATO & Device Intel</button>
+        <button class="nav-btn" data-view="audit">Automated Audit Log</button>
+        <button class="nav-btn" data-view="ml">ML & Self-Learning</button>
+      </div>
+      <div>
+        <div id="analystInfo" style="font-size:0.8rem;color:#475569;margin-bottom:10px;word-break:break-word;"></div>
+        <button id="logoutBtn" class="btn-secondary" style="width:100%;">Sign Out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <!-- OVERVIEW -->
+      <section id="view-overview" class="view active">
+        <div class="header-row"><h2>Fraud Operations Overview</h2></div>
+        <div class="kpi-grid">
+          <div class="panel"><div class="kpi-label">Total Scanned</div><div id="kpiTotal" class="kpi-val">0</div></div>
+          <div class="panel"><div class="kpi-label">Auto-Blocked</div><div id="kpiFraud" class="kpi-val" style="color:#dc2626;">0</div></div>
+          <div class="panel"><div class="kpi-label">Awaiting OTP</div><div id="kpiSusp" class="kpi-val" style="color:#d97706;">0</div></div>
+          <div class="panel"><div class="kpi-label">Loss Prevented</div><div id="kpiSaved" class="kpi-val" style="color:#047857;">₹0</div></div>
+        </div>
+        <div class="charts-grid">
+          <div class="panel"><h3 style="font-size:0.95rem;margin-bottom:12px;">Risk Split</h3><div style="height:240px;"><canvas id="statusChart"></canvas></div></div>
+          <div class="panel"><h3 style="font-size:0.95rem;margin-bottom:12px;">Flagged by Category</h3><div style="height:240px;"><canvas id="catChart"></canvas></div></div>
+        </div>
+      </section>
+
+      <!-- AI INVESTIGATOR (XAI) -->
+      <section id="view-investigator" class="view">
+        <div class="header-row">
+          <h2>AI Investigator & Explainable Fraud Detection</h2>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <select id="invTxSelect" style="background:#ffffff;border:1px solid #cbd5e1;color:#0f172a;padding:8px 12px;border-radius:10px;font-size:0.82rem;">
+              <option value="">-- Select a transaction --</option>
+            </select>
+            <button id="downloadSarBtn" class="btn-secondary hidden">Download SAR (.txt)</button>
+          </div>
+        </div>
+
+        <div id="invEmpty" class="panel" style="color:#64748b;font-size:0.88rem;">
+          Select a transaction from the dropdown above—or click <strong>Investigate</strong> on any row in the Automated Audit Log—to generate an explainable AI dossier.
+        </div>
+
+        <div id="invContent" class="hidden">
+          <div class="panel">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:12px;">
+              <div>
+                <strong id="invTitle" style="font-size:1.1rem;color:#0f172a;"></strong>
+                <div id="invMeta" style="font-size:0.8rem;color:#64748b;margin-top:3px;"></div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                <span id="invBadge" class="badge"></span>
+                <button id="btnConfirmFraud" class="btn-secondary" style="color:#dc2626;border-color:#fecaca;background:#fef2f2;">Confirm Fraud</button>
+                <button id="btnFalsePos" class="btn-secondary" style="color:#047857;border-color:#a7f3d0;background:#ecfdf5;">Mark Safe (False Positive)</button>
+              </div>
+            </div>
+            <div id="invSummary" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;font-size:0.88rem;line-height:1.6;color:#0f172a;"></div>
+          </div>
+
+          <div class="sim-grid">
+            <div class="panel">
+              <h3 style="font-size:0.95rem;margin-bottom:14px;">SHAP-Style Feature Risk Attribution</h3>
+              <div id="invAttributions" style="display:flex;flex-direction:column;gap:12px;"></div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:16px;">
+              <div class="panel" style="margin-bottom:0;">
+                <h3 style="font-size:0.95rem;margin-bottom:10px;">Counterfactual Analysis ("What-If")</h3>
+                <ul id="invCounterfactuals" style="padding-left:18px;font-size:0.84rem;color:#334155;line-height:1.6;"></ul>
+              </div>
+              <div class="panel" style="margin-bottom:0;">
+                <h3 style="font-size:0.95rem;margin-bottom:10px;">Recommended SOC Playbook</h3>
+                <ul id="invRecs" style="padding-left:18px;font-size:0.84rem;color:#047857;line-height:1.6;"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FRAUD NETWORK GRAPH -->
+      <section id="view-graph" class="view">
+        <div class="header-row">
+          <h2>Graph Intelligence & Money Mule Detection</h2>
+          <button id="refreshGraphBtn" class="btn-secondary">Refresh Graph</button>
+        </div>
+        <div class="kpi-grid">
+          <div class="panel"><div class="kpi-label">Network Entities</div><div id="gNodes" class="kpi-val">0</div></div>
+          <div class="panel"><div class="kpi-label">Shared-Device Rings</div><div id="gRings" class="kpi-val" style="color:#d97706;">0</div></div>
+          <div class="panel"><div class="kpi-label">Suspected Money Mules</div><div id="gMules" class="kpi-val" style="color:#dc2626;">0</div></div>
+          <div class="panel"><div class="kpi-label">Circular Loops</div><div id="gLoops" class="kpi-val" style="color:#7c3aed;">0</div></div>
+        </div>
+        <div class="sim-grid" style="grid-template-columns: 2fr 1fr;">
+          <div class="panel" style="padding:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:0.78rem;color:#64748b;flex-wrap:wrap;gap:6px;">
+              <span>Click any node to inspect • Drag or scroll to zoom</span>
+              <span>🔵 Account &nbsp;|&nbsp; 🔷 Device &nbsp;|&nbsp; 🔴 High-Risk Cluster</span>
+            </div>
+            <div id="networkCanvas" style="height:460px;background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px;"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div class="panel" style="margin-bottom:0;">
+              <h3 style="font-size:0.95rem;margin-bottom:10px;">Node Inspector</h3>
+              <div id="nodeInspector" style="font-size:0.84rem;color:#475569;">
+                Click any Account or Device node on the graph to view linked entities and risk metrics.
+              </div>
+            </div>
+            <div class="panel" style="margin-bottom:0;flex:1;overflow-y:auto;max-height:280px;">
+              <h3 style="font-size:0.95rem;margin-bottom:10px;">Detected Suspicious Networks</h3>
+              <div id="graphAlerts" style="font-size:0.82rem;color:#475569;">Scanning network...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ATO & DEVICE INTELLIGENCE -->
+      <section id="view-ato" class="view">
+        <div class="header-row">
+          <h2>Account Takeover & Device Reputation</h2>
+          <button id="refreshAtoBtn" class="btn-secondary">Refresh Intel</button>
+        </div>
+        <div class="kpi-grid">
+          <div class="panel"><div class="kpi-label">Tracked Devices</div><div id="atoDevTotal" class="kpi-val">0</div></div>
+          <div class="panel"><div class="kpi-label">High-Risk Devices</div><div id="atoDevRisk" class="kpi-val" style="color:#dc2626;">0</div></div>
+          <div class="panel"><div class="kpi-label">ATO & Session Alerts</div><div id="atoAlertsCount" class="kpi-val" style="color:#d97706;">0</div></div>
+          <div class="panel"><div class="kpi-label">Restricted Accounts</div><div id="atoRestrictedCount" class="kpi-val" style="color:#7c3aed;">0</div></div>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:0.95rem;margin-bottom:12px;">Device Reputation Profiles</h3>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr><th>Device ID</th><th>Linked Accounts</th><th>Legit / Fraud / Fails</th><th>Risk Score</th><th>Trust Status</th><th>Analyst Control</th></tr>
+              </thead>
+              <tbody id="atoDeviceBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:0.95rem;margin-bottom:12px;">Account Takeover & Security Events</h3>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr><th>Account</th><th>Category</th><th>Severity</th><th>Details</th></tr>
+              </thead>
+              <tbody id="atoEventsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- AUDIT LOG -->
+      <section id="view-audit" class="view">
+        <div class="header-row">
+          <h2>Automated Audit Log</h2>
+          <button id="exportCsvBtn" class="btn-secondary">Export CSV</button>
+        </div>
+        <div class="panel">
+          <div style="overflow-x:auto;">
+            <table>
+              <thead><tr><th>TXN ID</th><th>User / Device</th><th>Amount</th><th>Score</th><th>Status</th><th>Action</th><th>XAI</th></tr></thead>
+              <tbody id="auditBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ML, BENCHMARK & WATCHLIST -->
+      <section id="view-ml" class="view">
+        <div class="header-row"><h2>ML & Self-Learning Memory</h2></div>
+        <div class="panel" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+          <div>
+            <strong style="color:#0f172a;">Random Forest Classifier (30 Trees)</strong>
+            <div id="mlStatus" style="font-size:0.82rem;color:#64748b;margin-top:4px;">Loading...</div>
+          </div>
+          <button id="retrainBtn" class="btn-primary">Retrain on Live Data</button>
+        </div>
+
+        <div class="panel">
+          <h3 style="font-size:0.95rem;margin-bottom:12px;">Chronological Model Evaluation Benchmark (80/20 Split)</h3>
+          <div id="evalSummary" style="font-size:0.8rem;color:#64748b;margin-bottom:12px;">Loading evaluation metrics...</div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Detection Mode</th>
+                  <th>Accuracy</th>
+                  <th>Precision</th>
+                  <th>Recall</th>
+                  <th>F1-Score</th>
+                  <th>FPR</th>
+                  <th>Confusion Matrix (TP/FP/TN/FN)</th>
+                </tr>
+              </thead>
+              <tbody id="evalBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 style="font-size:0.95rem;margin-bottom:12px;">Auto-Learned Watchlist & Trusted Patterns</h3>
+          <table>
+            <thead><tr><th>Type</th><th>Entity</th><th>Action</th><th></th></tr></thead>
+            <tbody id="watchBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- INFO MODAL 1: KNOW ABOUT FS ENGINE -->
+  <div id="engineBackdrop" class="info-backdrop">
+    <div class="guide-modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <h3>About FraudShield-Pro Engine</h3>
+        <button type="button" id="closeEngineBtn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="engine-highlight">
+          <strong>Built for Bank Servers:</strong> This website exists primarily to demonstrate and deliver the <strong>FraudShield-Pro Engine</strong>—a modular, real-time fraud detection core designed so <strong>any bank server or payment gateway</strong> can plug it directly into their transaction pipeline to score, pause, or block fraudulent activity before settlement.
+        </div>
+        <div class="guide-step">
+          <div class="step-head"><span class="step-num">Layer 1</span><span class="step-title">Weighted Hybrid Risk Engine</span></div>
+          <p>Scores every transaction out of 100 across Machine Learning (40%), Behavioral Anomalies (25%), Velocity &amp; Structuring (15%), and Device &amp; Network Intelligence (20%).</p>
+        </div>
+        <div class="guide-step">
+          <div class="step-head"><span class="step-num">Layer 2</span><span class="step-title">Graph Intelligence &amp; Money Mule Detection</span></div>
+          <p>Detects Shared-Device Fraud Rings, Money Mule Collectors, Rapid Distributors, and Circular Transfer Loops.</p>
+        </div>
+        <div class="guide-step">
+          <div class="step-head"><span class="step-num">Layer 3</span><span class="step-title">ATO, Device Reputation &amp; ScamShield</span></div>
+          <p>Tracks device trust over time, catches suspicious login-to-transfer sequences, and warns customers against social-engineering scams before funds move.</p>
+        </div>
+        <div class="guide-step">
+          <div class="step-head"><span class="step-num">Layer 4</span><span class="step-title">AI Investigator (XAI) &amp; Self-Learning Loop</span></div>
+          <p>Provides SHAP-style risk attributions, counterfactuals, downloadable SAR dossiers, and one-click analyst feedback that retrains the model.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="doneEngineBtn" class="guide-btn" style="background:#0f172a;color:#fff;border-color:#0f172a;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO MODAL 2: KNOW HOW TO TEST -->
+  <div id="guideBackdrop" class="info-backdrop">
+    <div class="guide-modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <h3>How to Test FraudShield-Pro Engine</h3>
+        <button type="button" id="closeGuideBtn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="guide-step">
+          <div class="step-head"><span class="step-num">Step 1</span><span class="step-title">Create Two Test Accounts</span></div>
+          <p>Open the <strong>Payment Sandbox</strong> and register Account A (starts with <code>₹50,000</code>), then open an <strong>Incognito Window</strong> and register Account B. Copy Account B's <code>FSP-XXXXXXXX</code> number.</p>
+        </div>
+        <div class="guide-step">
+          <div class="step-head"><span class="step-num">Step 2</span><span class="step-title">Test Transfers &amp; ScamShield</span></div>
+          <p>Send a normal <code>₹1,000</code> transfer, then try typing <code>Urgent KYC refund</code> in the Note field to trigger the ScamShield warning modal.</p>
+        </div>
+        <div class="guide-step">
+          <div class="step-head"><span class="step-num">Step 3</span><span class="step-title">Run Transaction Simulator Presets</span></div>
+          <p>Open the <strong>Transaction Simulator</strong> tab inside the Payment Sandbox and test the <code>Safe</code>, <code>Suspicious</code>, <code>High-Risk Fraud</code>, and <code>Fraud Ring</code> presets.</p>
+        </div>
+        <div class="guide-step">
+          <div class="step-head"><span class="step-num">Step 4</span><span class="step-title">Inspect in the Bank Analyst SOC Portal</span></div>
+          <p>Log in here to inspect live KPIs, the <strong>Fraud Network Graph</strong>, <strong>ATO &amp; Device Intel</strong>, and the <strong>AI Investigator</strong>.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="doneGuideBtn" class="guide-btn" style="background:#0f172a;color:#fff;border-color:#0f172a;">Got It</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const eBack = document.getElementById('engineBackdrop');
+      const gBack = document.getElementById('guideBackdrop');
+      const closeAll = () => { eBack.classList.remove('open'); gBack.classList.remove('open'); };
+      document.getElementById('openEngineBtn').onclick = () => eBack.classList.add('open');
+      document.getElementById('closeEngineBtn').onclick = closeAll;
+      document.getElementById('doneEngineBtn').onclick = closeAll;
+      document.getElementById('openGuideBtn').onclick = () => gBack.classList.add('open');
+      document.getElementById('closeGuideBtn').onclick = closeAll;
+      document.getElementById('doneGuideBtn').onclick = closeAll;
+      eBack.onclick = (e) => { if (e.target === eBack) closeAll(); };
+      gBack.onclick = (e) => { if (e.target === gBack) closeAll(); };
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+
+      const passInput = document.getElementById('authPassword');
+      const toggleBtn = document.getElementById('toggleAuthPass');
+      toggleBtn.onclick = () => {
+        const isPass = passInput.type === 'password';
+        passInput.type = isPass ? 'text' : 'password';
+        toggleBtn.setAttribute('aria-label', isPass ? 'Hide password' : 'Show password');
+      };
+    })();
+  </script>
+  <script src="analyst.js"></script>
+</body>
+</html>

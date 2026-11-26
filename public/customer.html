@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FraudShield Engine — Live Payment Simulator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="customer.css" />
+  <style>
+    .hidden { display: none !important; }
+
+    /* AUTH SCREEN MATCHING LANDING PAGE */
+    .auth-page {
+      min-height: 100vh;
+      width: 100%;
+      background-color: #f8fafc;
+      background-image: radial-gradient(#cbd5e1 0.75px, transparent 0.75px);
+      background-size: 24px 24px;
+      color: #0f172a;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .auth-topbar {
+      width: 100%;
+      padding: 24px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: #0f172a;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.28rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #0f172a;
+    }
+
+    .brand-title span {
+      color: #047857;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .guide-btn {
+      background: #ffffff;
+      color: #0f172a;
+      border: 1.5px solid #cbd5e1;
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .guide-btn:hover {
+      background: #0f172a;
+      color: #ffffff;
+      border-color: #0f172a;
+    }
+
+    .auth-split {
+      flex: 1;
+      max-width: 1080px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px 28px 64px;
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      gap: 56px;
+      align-items: center;
+    }
+
+    .portal-kicker {
+      display: inline-block;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #475569;
+      margin-bottom: 10px;
+    }
+
+    .auth-info h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 3.4vw, 2.7rem);
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      line-height: 1.12;
+      color: #047857;
+      margin-bottom: 12px;
+    }
+
+    .auth-quote {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: 1.08rem;
+      color: #047857;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .auth-info > p.auth-desc {
+      font-size: 0.94rem;
+      color: #475569;
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+
+    .auth-points {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .auth-points li {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 0.86rem;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    .auth-points li strong {
+      display: block;
+      font-family: 'Space Grotesk', sans-serif;
+      color: #0f172a;
+      font-size: 0.92rem;
+      margin-bottom: 2px;
+    }
+
+    .auth-box {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 20px;
+      padding: 36px;
+      width: 100%;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+    }
+
+    .auth-box h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+
+    .auth-box .sub {
+      font-size: 0.88rem;
+      color: #475569;
+      margin-bottom: 22px;
+    }
+
+    .auth-box .field label {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .auth-box .field input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      color: #0f172a;
+      background: #ffffff;
+      transition: border-color 0.15s ease;
+    }
+
+    .auth-box .field input:focus {
+      outline: none;
+      border-color: #0f172a;
+    }
+
+    .pass-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .pass-wrap input {
+      padding-right: 44px;
+    }
+
+    .pass-toggle {
+      position: absolute;
+      right: 12px;
+      background: transparent;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pass-toggle:hover {
+      color: #0f172a;
+    }
+
+    .auth-box .btn-primary {
+      padding: 13px 18px;
+      font-size: 0.94rem;
+      border-radius: 999px;
+      background: #047857;
+    }
+
+    .auth-box .btn-primary:hover {
+      background: #065f46;
+    }
+
+    .auth-footer-link {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid #f1f5f9;
+      font-size: 0.84rem;
+      text-align: center;
+    }
+
+    .auth-footer-link a {
+      color: #475569;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .auth-footer-link a:hover {
+      color: #0f172a;
+    }
+
+    /* INFO MODALS */
+    .info-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .info-backdrop.open { display: flex; }
+
+    .guide-modal {
+      background: #ffffff;
+      border-radius: 20px;
+      max-width: 700px;
+      width: 100%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+    }
+
+    .modal-header {
+      padding: 20px 26px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-header h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      color: #000000;
+    }
+
+    .close-btn {
+      background: #f1f5f9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.15rem;
+      color: #0f172a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-body {
+      padding: 22px 26px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .engine-highlight {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 16px 18px;
+      color: #000000;
+      font-size: 0.87rem;
+      line-height: 1.6;
+    }
+
+    .guide-step {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 15px 18px;
+    }
+
+    .step-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .step-num {
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    .step-title {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: #000000;
+    }
+
+    .guide-step p {
+      font-size: 0.84rem;
+      color: #000000;
+      line-height: 1.55;
+    }
+
+    .guide-step code {
+      background: #e2e8f0;
+      color: #0f172a;
+      padding: 1px 6px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+    }
+
+    .modal-footer {
+      padding: 16px 26px;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* APP STYLES — MATCH LOGIN PAGE BACKGROUND & GREEN THEME */
+    #appSection {
+      min-height: 100vh;
+      background-color: #f8fafc;
+      background-image: radial-gradient(#cbd5e1 0.75px, transparent 0.75px);
+      background-size: 24px 24px;
+      padding-bottom: 48px;
+    }
+
+    #appSection .sim-banner {
+      background: #ecfdf5 !important;
+      color: #047857 !important;
+      border-bottom: 1px solid #a7f3d0;
+    }
+
+    #appSection .topbar {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .subnav { max-width: 920px; margin: 18px auto 0; padding: 0 18px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .subnav-btn { background: #fff; border: 1px solid #e2e8f0; color: #475569; padding: 9px 16px; border-radius: 999px; font-size: 0.84rem; font-weight: 600; cursor: pointer; }
+    #appSection .subnav-btn.active { background: #047857 !important; color: #fff !important; border-color: #047857 !important; }
+    #appSection .balance-card { background: linear-gradient(135deg, #047857 0%, #065f46 100%) !important; color: #ffffff !important; }
+    #appSection .btn-primary { background: #047857 !important; color: #ffffff !important; }
+    #appSection .btn-primary:hover { background: #065f46 !important; }
+    #appSection #demoOtp { color: #047857 !important; }
+
+    .c-view { display: none; }
+    .c-view.active { display: grid; }
+    .full-span { grid-column: 1 / -1; }
+    .pill-new { background: #fef7e0; color: #b06000; padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 600; }
+    .pill-est { background: #e6f4ea; color: #137333; padding: 2px 8px; border-radius: 999px; font-size: 0.7rem; font-weight: 600; }
+    .amt-debit { color: #d93025; font-weight: 700; }
+    .amt-credit { color: #137333; font-weight: 700; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .preset-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .preset-btn {
+      background: #f1f5f9; border: 1px solid #cbd5e1; color: #0f172a;
+      padding: 6px 12px; border-radius: 999px; font-size: 0.78rem; font-weight: 600; cursor: pointer;
+    }
+    .preset-btn:hover { background: #e2e8f0; }
+
+    /* ScamShield Modal */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(4px); display: flex; align-items: center;
+      justify-content: center; padding: 18px; z-index: 100;
+    }
+    .scam-modal {
+      background: #ffffff; border-radius: 22px; max-width: 480px; width: 100%;
+      padding: 26px; box-shadow: 0 20px 50px rgba(15, 23, 42, 0.2);
+    }
+    .scam-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .scam-icon {
+      width: 42px; height: 42px; border-radius: 12px; background: #fef7e0;
+      color: #b06000; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 1.2rem; flex-shrink: 0;
+    }
+    .scam-list { list-style: none; margin: 14px 0; display: flex; flex-direction: column; gap: 10px; }
+    .scam-list li {
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;
+      padding: 12px 14px; font-size: 0.84rem;
+    }
+    .scam-list li strong { display: block; color: #0f172a; margin-bottom: 3px; }
+    .scam-list li span { color: #475569; line-height: 1.45; }
+    .scam-actions { display: flex; gap: 10px; margin-top: 18px; }
+
+    @media (max-width: 880px) {
+      .auth-topbar { padding: 18px 20px; }
+      .auth-split { grid-template-columns: 1fr; gap: 28px; padding: 12px 20px 44px; }
+      .row2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- AUTH SECTION -->
+  <div id="authSection" class="auth-page">
+    <header class="auth-topbar">
+      <a href="/" class="brand-logo">
+        <div class="brand-mark">FS</div>
+        <span class="brand-title">FraudShield-Pro <span>Engine</span></span>
+      </a>
+      <div class="topbar-actions">
+        <button type="button" id="openEngineBtn" class="guide-btn">Know About FS Engine</button>
+        <button type="button" id="openGuideBtn" class="guide-btn">Know How to Test</button>
+      </div>
+    </header>
+
+    <div class="auth-split">
+      <div class="auth-info">
+        <span class="portal-kicker">Testing Harness • Sandbox Environment</span>
+        <h2>Live Payment Simulator</h2>
+        <p class="auth-quote">
+          “Stress-test every transfer, scam alert, and fraud pattern against the live engine.”
+        </p>
+        <p class="auth-desc">
+          An interactive sandbox built strictly to test the FraudShield-Pro Engine. Generate realistic transfers and attack scenarios to watch the detector respond in real time.
+        </p>
+        <ul class="auth-points">
+          <li>
+            <strong>Instant Simulated Accounts</strong>
+            Every new test account starts with ₹50,000 in simulated funds and an atomic passbook ledger.
+          </li>
+          <li>
+            <strong>Built-In Transaction Simulator</strong>
+            Trigger Safe, Suspicious, High-Risk Fraud, and Fraud Ring presets in one click.
+          </li>
+          <li>
+            <strong>ScamShield &amp; Step-Up OTP</strong>
+            Test pre-payment social-engineering warnings, OTP challenges, and automatic blocks.
+          </li>
+        </ul>
+      </div>
+
+      <div class="auth-box">
+        <h1>Simulator Access</h1>
+        <p class="sub">Sign in or open a simulated test account.</p>
+        <div class="tabs">
+          <button id="tabLogin" class="tab active">Sign In</button>
+          <button id="tabRegister" class="tab">Open Account</button>
+        </div>
+        <form id="authForm">
+          <div id="nameWrap" class="field hidden">
+            <label>Full Name</label>
+            <input type="text" id="authName" placeholder="e.g., Abhijeet Tewary" />
+          </div>
+          <div class="field">
+            <label>Email Address</label>
+            <input type="email" id="authEmail" placeholder="you@example.com" required />
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <div class="pass-wrap">
+              <input type="password" id="authPassword" placeholder="Minimum 6 characters" required />
+              <button type="button" class="pass-toggle" id="toggleAuthPass" aria-label="Show password">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <p id="authError" class="error-msg hidden"></p>
+          <button type="submit" id="authBtn" class="btn-primary">Sign In</button>
+        </form>
+        <div class="auth-footer-link">
+          <a href="/">← Switch Portal</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP SECTION -->
+  <div id="appSection" class="hidden">
+    <div class="sim-banner">LIVE PAYMENT SIMULATOR — Testing sandbox built strictly to stress-test the FraudShield-Pro Engine.</div>
+
+    <header class="topbar">
+      <a href="/" class="brand-logo">
+        <div class="brand-mark">FS</div>
+        <span class="brand-title">FraudShield <span>Engine</span></span>
+      </a>
+      <div class="topbar-right">
+        <span id="navUserName" style="font-weight:600;"></span>
+        <button id="logoutBtn" class="btn-outline">Sign Out</button>
+      </div>
+    </header>
+
+    <div class="subnav">
+      <button class="subnav-btn active" data-tab="home">Home</button>
+      <button class="subnav-btn" data-tab="transfer">Send Money</button>
+      <button class="subnav-btn" data-tab="simulator">Transaction Simulator</button>
+      <button class="subnav-btn" data-tab="beneficiaries">Beneficiaries</button>
+      <button class="subnav-btn" data-tab="passbook">Passbook & Ledger</button>
+      <button class="subnav-btn" data-tab="security">Security Center</button>
+    </div>
+
+    <!-- TAB 1: HOME -->
+    <main id="tab-home" class="container c-view active">
+      <section class="card balance-card">
+        <div>
+          <div class="bal-label">Available Simulated Balance</div>
+          <div id="balanceDisplay" class="bal-amount">₹50,000</div>
+        </div>
+        <div class="acc-pill">Account: <strong id="accountNumberDisplay">FSP-00000000</strong></div>
+      </section>
+
+      <section class="card">
+        <h3>Recent Ledger Activity</h3>
+        <div id="homeLedgerList"><p style="color:#64748b;font-size:0.86rem;">No transfers yet.</p></div>
+      </section>
+
+      <section class="card">
+        <h3>Security Notifications</h3>
+        <div id="homeAlertList"><p style="color:#64748b;font-size:0.86rem;">No security alerts. Your account looks safe.</p></div>
+      </section>
+    </main>
+
+    <!-- TAB 2: SEND MONEY -->
+    <main id="tab-transfer" class="container c-view">
+      <section class="card">
+        <h3>Transfer to Registered Customer</h3>
+        <form id="transferForm">
+          <div class="field">
+            <label>Select Saved Beneficiary (or enter Account No. below)</label>
+            <select id="benSelect"><option value="">-- Enter manually --</option></select>
+          </div>
+          <div class="field">
+            <label>Recipient Account Number</label>
+            <input type="text" id="recAccInput" placeholder="e.g., FSP-12345678" required />
+          </div>
+          <div class="field">
+            <label>Amount (₹)</label>
+            <input type="number" id="payAmount" value="1000" min="1" required />
+          </div>
+          <div class="field">
+            <label>Category</label>
+            <select id="payCategory">
+              <option value="Wire Transfer">Bank / Wire Transfer</option>
+              <option value="Retail">Retail / Shopping</option>
+              <option value="Groceries">Groceries / Food</option>
+              <option value="Utilities">Bills & Utilities</option>
+              <option value="Luxury Goods">Luxury Goods</option>
+              <option value="Crypto">Crypto Exchange</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Note / Description</label>
+            <input type="text" id="payDesc" placeholder="e.g., Dinner split" />
+          </div>
+          <div class="telemetry">
+            <span>Device: <strong id="telDevice">-</strong></span>
+            <span>Location: <strong id="telLocation">Detecting...</strong></span>
+            <span>Time: <strong id="telTime">-</strong></span>
+            <span>Network: <strong id="telNet">Checking...</strong></span>
+          </div>
+          <button type="submit" class="btn-primary">Send Money Securely</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h3>Live FraudShield Verdict</h3>
+        <div id="outcomeEmpty" style="color:#64748b;font-size:0.88rem;">Submit a transfer on the left. ScamShield checks for scam signals before FraudShield Pro evaluates the payment.</div>
+        <div id="outcomeWrap" class="hidden">
+          <div id="outcomeBanner" class="banner">
+            <strong id="outcomeTitle"></strong>
+            <p id="outcomeMsg" style="font-size:0.84rem;margin-top:4px;"></p>
+          </div>
+          <div id="otpBox" class="otp-box hidden">
+            <div style="display:flex;justify-content:space-between;font-size:0.82rem;">
+              <strong>Step-Up Verification</strong>
+              <span id="demoOtp" style="font-family:monospace;font-weight:700;"></span>
+            </div>
+            <div class="otp-row">
+              <input type="text" id="otpInput" maxlength="6" placeholder="6-digit OTP" style="flex:1;padding:9px;border:1px solid #cbd5e1;border-radius:8px;" />
+              <button type="button" id="verifyOtpBtn" class="btn-primary" style="width:auto;padding:9px 16px;">Verify</button>
+            </div>
+            <p id="otpErr" class="error-msg hidden"></p>
+            <button type="button" id="denyOtpBtn" class="btn-danger">Not Me — Block & Blacklist Device</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- TAB 3: TRANSACTION SIMULATOR -->
+    <main id="tab-simulator" class="container c-view">
+      <section class="card">
+        <h3>Fraud Engine Transaction Simulator</h3>
+        <p style="font-size:0.82rem;color:#64748b;margin-bottom:14px;">
+          Pick a preset or customize parameters to stress-test the FraudShield-Pro Engine. Results appear immediately in the Analyst SOC Dashboard.
+        </p>
+        <div class="preset-row">
+          <button type="button" class="preset-btn" data-p="safe">Safe Preset</button>
+          <button type="button" class="preset-btn" data-p="suspicious">Suspicious Preset</button>
+          <button type="button" class="preset-btn" data-p="fraud">High-Risk Fraud</button>
+          <button type="button" class="preset-btn" data-p="ring">Fraud Ring</button>
+        </div>
+        <form id="simForm">
+          <div class="row2">
+            <div class="field"><label>Customer ID</label><input id="sUser" value="USR_1042" required /></div>
+            <div class="field"><label>Device ID</label><input id="sDev" value="DEV-8841" required /></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label>Amount (₹)</label><input type="number" id="sAmt" value="2400" required /></div>
+            <div class="field"><label>Hour (0–23)</label><input type="number" id="sHour" value="15" min="0" max="23" required /></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label>Category</label>
+              <select id="sCat">
+                <option>Retail</option><option>Groceries</option><option>Utilities</option>
+                <option>Crypto</option><option>Gambling</option><option>Wire Transfer</option><option>Luxury Goods</option>
+              </select>
+            </div>
+            <div class="field"><label>Country</label><input id="sLoc" value="India" required /></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label>Account Age (Days)</label><input type="number" id="sAge" value="210" min="0" required /></div>
+            <div class="field"><label>Device / Network</label>
+              <select id="sType"><option>Mobile App</option><option>Web Browser</option><option>Unknown/VPN</option></select>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary">Run Engine Evaluation</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h3>Simulator Evaluation Verdict</h3>
+        <div id="simResult" style="font-size:0.86rem;color:#64748b;">
+          Select a preset on the left and click <strong>Run Engine Evaluation</strong> to inspect the live risk score and triggered signals.
+        </div>
+      </section>
+    </main>
+
+    <!-- TAB 4: BENEFICIARIES -->
+    <main id="tab-beneficiaries" class="container c-view">
+      <section class="card">
+        <h3>Add New Beneficiary</h3>
+        <form id="addBenForm">
+          <div class="field">
+            <label>Registered Account Number</label>
+            <input type="text" id="newBenAcc" placeholder="e.g., FSP-84920112" required />
+          </div>
+          <div class="field">
+            <label>Nickname (Optional)</label>
+            <input type="text" id="newBenNick" placeholder="e.g., Roommate / Landlord" />
+          </div>
+          <p id="benMsg" style="font-size:0.82rem;margin-bottom:10px;"></p>
+          <button type="submit" class="btn-primary">Save Beneficiary</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h3>Saved Beneficiaries</h3>
+        <div id="benList"><p style="color:#64748b;font-size:0.86rem;">No saved beneficiaries yet.</p></div>
+      </section>
+    </main>
+
+    <!-- TAB 5: PASSBOOK / LEDGER -->
+    <main id="tab-passbook" class="container c-view">
+      <section class="card full-span">
+        <h3>Account Passbook (Atomic Debit & Credit Ledger)</h3>
+        <div id="fullLedgerList"><p style="color:#64748b;font-size:0.86rem;">No ledger entries yet.</p></div>
+      </section>
+    </main>
+
+    <!-- TAB 6: SECURITY CENTER -->
+    <main id="tab-security" class="container c-view">
+      <section class="card">
+        <h3>Trusted Devices</h3>
+        <div id="secDevices"></div>
+        <button id="logoutAllBtn" class="btn-outline" style="margin-top:14px;width:100%;">Log Out All Other Sessions</button>
+      </section>
+
+      <section class="card">
+        <h3>Change Password</h3>
+        <form id="changePassForm">
+          <div class="field"><label>Current Password</label><input type="password" id="currPass" required /></div>
+          <div class="field"><label>New Password</label><input type="password" id="newPass" required /></div>
+          <p id="passMsg" style="font-size:0.82rem;margin-bottom:10px;"></p>
+          <button type="submit" class="btn-primary">Update Password</button>
+        </form>
+      </section>
+
+      <section class="card full-span">
+        <h3>Recent Login Activity & Security Alerts</h3>
+        <div id="secAlerts"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- SCAMSHIELD PRE-PAYMENT WARNING MODAL -->
+  <div id="scamModalBackdrop" class="modal-backdrop hidden">
+    <div class="scam-modal">
+      <div class="scam-header">
+        <div class="scam-icon">!</div>
+        <div>
+          <h3 style="font-size:1.08rem;color:#0f172a;margin:0;">ScamShield Protection Check</h3>
+          <p id="scamSubtext" style="font-size:0.8rem;color:#64748b;margin-top:2px;">Please review before sending money.</p>
+        </div>
+      </div>
+      <ul id="scamWarningList" class="scam-list"></ul>
+      <p style="font-size:0.78rem;color:#64748b;line-height:1.45;">
+        Please verify the recipient independently before proceeding. Only continue if you know and trust this person.
+      </p>
+      <div class="scam-actions">
+        <button type="button" id="scamCancelBtn" class="btn-primary" style="flex:1;background:#047857;">Cancel Payment</button>
+        <button type="button" id="scamProceedBtn" class="btn-outline" style="flex:1;padding:12px;">Proceed Anyway</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO MODAL 1: KNOW ABOUT FS ENGINE -->
+  <div id="engineBackdrop" class="info-backdrop">
+    <div class="guide-modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <h3>About FraudShield-Pro Engine</h3>
+        <button type="button" id="closeEngineBtn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="engine-highlight">
+          <strong>Built for Bank Servers:</strong> This website exists primarily to demonstrate and deliver the <strong>FraudShield-Pro Engine</strong>—a modular, real-time fraud detection core designed so <strong>any bank server or payment gateway</strong> can plug it directly into their transaction pipeline to score, pause, or block fraudulent activity before settlement.
+        </div>
+        <div class="guide-step">
+          <div class="step-head"><span class="step-num">Layer 1</span><span class="step-title">Weighted Hybrid Risk Engine</span></div>
+          <p>Scores every transaction out of 100 across Machine Learning (40%), Behavioral Anomalies (25%), Velocity &amp; Structuring (15%), and Device &amp; Network Intelligence (20%).</p>
+        </div>
+        <div class="guide-step">
+          <div class="step-head"><span class="step-num">Layer 2</span><span class="step-title">Graph Intelligence &amp; Money Mule Detection</span></div>
+          <p>Detects Shared-Device Fraud Rings, Money Mule Collectors, Rapid Distributors, and Circular Transfer Loops.</p>
+        </div>
+        <div class="guide-step">
+          <div class="step-head"><span class="step-num">Layer 3</span><span class="step-title">ATO, Device Reputation &amp; ScamShield</span></div>
+          <p>Tracks device trust over time, catches suspicious login-to-transfer sequences, and warns customers against social-engineering scams before funds move.</p>
+        </div>
+        <div class="guide-step">
+          <div class="step-head"><span class="step-num">Layer 4</span><span class="step-title">AI Investigator (XAI) &amp; Self-Learning Loop</span></div>
+          <p>Provides SHAP-style risk attributions, counterfactuals, downloadable SAR dossiers, and one-click analyst feedback that retrains the model.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="doneEngineBtn" class="guide-btn" style="background:#0f172a;color:#fff;border-color:#0f172a;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO MODAL 2: KNOW HOW TO TEST -->
+  <div id="guideBackdrop" class="info-backdrop">
+    <div class="guide-modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <h3>How to Test FraudShield-Pro Engine</h3>
+        <button type="button" id="closeGuideBtn" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="guide-step">
+          <div class="step-head"><span class="step-num">Step 1</span><span class="step-title">Create Two Test Accounts</span></div>
+          <p>Register Account A here (starts with <code>₹50,000</code>), then open an <strong>Incognito Window</strong> and register Account B. Copy Account B's <code>FSP-XXXXXXXX</code> number.</p>
+        </div>
+        <div class="guide-step">
+          <div class="step-head"><span class="step-num">Step 2</span><span class="step-title">Test Transfers &amp; ScamShield</span></div>
+          <p>Send a normal <code>₹1,000</code> transfer, then try typing <code>Urgent KYC refund</code> in the Note field to trigger the ScamShield warning modal.</p>
+        </div>
+        <div class="guide-step">
+          <div class="step-head"><span class="step-num">Step 3</span><span class="step-title">Run Transaction Simulator Presets</span></div>
+          <p>Open the <strong>Transaction Simulator</strong> tab inside this portal and test the <code>Safe</code>, <code>Suspicious</code>, <code>High-Risk Fraud</code>, and <code>Fraud Ring</code> presets.</p>
+        </div>
+        <div class="guide-step">
+          <div class="step-head"><span class="step-num">Step 4</span><span class="step-title">Inspect in the Bank Analyst SOC Portal</span></div>
+          <p>Switch to the Analyst Portal to inspect live KPIs, the <strong>Fraud Network Graph</strong>, <strong>ATO &amp; Device Intel</strong>, and the <strong>AI Investigator</strong>.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="doneGuideBtn" class="guide-btn" style="background:#0f172a;color:#fff;border-color:#0f172a;">Got It</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const eBack = document.getElementById('engineBackdrop');
+      const gBack = document.getElementById('guideBackdrop');
+      const closeAll = () => { eBack.classList.remove('open'); gBack.classList.remove('open'); };
+      document.getElementById('openEngineBtn').onclick = () => eBack.classList.add('open');
+      document.getElementById('closeEngineBtn').onclick = closeAll;
+      document.getElementById('doneEngineBtn').onclick = closeAll;
+      document.getElementById('openGuideBtn').onclick = () => gBack.classList.add('open');
+      document.getElementById('closeGuideBtn').onclick = closeAll;
+      document.getElementById('doneGuideBtn').onclick = closeAll;
+      eBack.onclick = (e) => { if (e.target === eBack) closeAll(); };
+      gBack.onclick = (e) => { if (e.target === gBack) closeAll(); };
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+
+      const passInput = document.getElementById('authPassword');
+      const toggleBtn = document.getElementById('toggleAuthPass');
+      toggleBtn.onclick = () => {
+        const isPass = passInput.type === 'password';
+        passInput.type = isPass ? 'text' : 'password';
+        toggleBtn.setAttribute('aria-label', isPass ? 'Hide password' : 'Show password');
+      };
+    })();
+  </script>
+  <script src="customer.js"></script>
+</body>
+</html>

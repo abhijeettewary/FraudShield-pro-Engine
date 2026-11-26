@@ -1,0 +1,324 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  background: #f4f6f9;
+  color: #1f2937;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hidden { display: none !important; }
+
+.sim-banner {
+  background: #e8f0fe;
+  color: #1967d2;
+  text-align: center;
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  letter-spacing: 0.01em;
+}
+
+/* Auth Card */
+.auth-wrap {
+  max-width: 420px;
+  margin: 64px auto;
+  padding: 0 18px;
+}
+
+.auth-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  padding: 34px 30px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.auth-card h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.auth-card .sub {
+  font-size: 0.88rem;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 22px;
+  background: #f1f5f9;
+  padding: 5px;
+  border-radius: 999px;
+}
+
+.tab {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 9px 12px;
+  font-weight: 600;
+  font-size: 0.84rem;
+  color: #64748b;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab.active {
+  background: #ffffff;
+  color: #1a73e8;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+}
+
+/* Inputs & Buttons */
+.field { margin-bottom: 16px; }
+
+.field label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  color: #111827;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.14);
+}
+
+.btn-primary {
+  width: 100%;
+  background: #1a73e8;
+  color: #ffffff;
+  border: none;
+  padding: 13px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn-primary:hover { background: #1557b0; }
+.btn-primary:active { transform: scale(0.99); }
+
+.error-msg {
+  color: #d93025;
+  background: #fce8e6;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+
+/* Top Navigation Bar */
+.topbar {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #e5e7eb;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topbar-brand {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: #1a73e8;
+  letter-spacing: -0.02em;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.88rem;
+  color: #374151;
+}
+
+.btn-outline {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  padding: 7px 16px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-outline:hover { background: #f3f4f6; }
+
+/* Main Layout */
+.container {
+  max-width: 920px;
+  margin: 26px auto;
+  padding: 0 18px 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+@media (max-width: 768px) {
+  .container { grid-template-columns: 1fr; }
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+/* Google Pay Style Balance Card */
+.balance-card {
+  background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%);
+  border: none;
+  color: #ffffff;
+  grid-column: 1 / -1;
+  padding: 28px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  box-shadow: 0 12px 28px rgba(26, 115, 232, 0.22);
+}
+
+.bal-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.bal-amount {
+  font-size: 2.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: 6px;
+}
+
+.acc-pill {
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-family: monospace;
+  font-size: 0.88rem;
+  color: #ffffff;
+}
+
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #111827;
+}
+
+.telemetry {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 0.78rem;
+  color: #475569;
+  margin-bottom: 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* Payment Status Banners */
+.banner {
+  padding: 16px;
+  border-radius: 14px;
+  margin-bottom: 14px;
+}
+
+.banner.safe { background: #e6f4ea; border: 1px solid #ceead6; color: #137333; }
+.banner.suspicious { background: #fef7e0; border: 1px solid #fde293; color: #b06000; }
+.banner.fraudulent { background: #fce8e6; border: 1px solid #fad2cf; color: #c5221f; }
+
+.otp-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.otp-row { display: flex; gap: 8px; margin: 12px 0; }
+
+.btn-danger {
+  width: 100%;
+  background: #ffffff;
+  color: #d93025;
+  border: 1px solid #f5c2c0;
+  padding: 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.btn-danger:hover { background: #fce8e6; }
+
+/* Transaction History List */
+.tx-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 6px;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.15s;
+}
+
+.tx-item:hover { background: #f8fafc; border-radius: 10px; }
+.tx-item:last-child { border-bottom: none; }
+
+.badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-top: 4px;
+}
+
+.badge-Safe { background: #e6f4ea; color: #137333; }
+.badge-Suspicious { background: #fef7e0; color: #b06000; }
+.badge-Fraudulent { background: #fce8e6; color: #c5221f; }

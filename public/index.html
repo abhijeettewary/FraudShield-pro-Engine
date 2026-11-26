@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FraudShield-Pro Engine — Real-Time Fraud Detection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOP BAR */
+    .topbar {
+      width: 100%;
+      padding: 24px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: #0f172a;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.28rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #0f172a;
+    }
+
+    .brand-title span {
+      color: #047857;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .guide-btn {
+      background: #ffffff;
+      color: #0f172a;
+      border: 1.5px solid #cbd5e1;
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .guide-btn:hover {
+      background: #0f172a;
+      color: #ffffff;
+      border-color: #0f172a;
+    }
+
+    /* MAIN HERO */
+    .main-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 24px 64px;
+      max-width: 1040px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .hero {
+      text-align: center;
+      max-width: 740px;
+      margin-bottom: 44px;
+    }
+
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.1rem, 4.4vw, 3.25rem);
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      line-height: 1.12;
+      color: #0f172a;
+      margin-bottom: 18px;
+    }
+
+    .hero-quote {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: clamp(1.12rem, 2.1vw, 1.38rem);
+      color: #047857;
+      line-height: 1.5;
+      margin: 0 auto 14px;
+      max-width: 640px;
+    }
+
+    .hero-desc {
+      font-size: 0.94rem;
+      color: #475569;
+      line-height: 1.6;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    /* PORTAL CARDS */
+    .portal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      width: 100%;
+      max-width: 880px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+    }
+
+    .card-featured {
+      border: 1.5px solid #0f172a;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .icon-soc {
+      background: #0f172a;
+      color: #ffffff;
+    }
+
+    .icon-sim {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #dbeafe;
+    }
+
+    .role-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 5px 10px;
+      border-radius: 999px;
+    }
+
+    .badge-core {
+      background: #0f172a;
+      color: #ffffff;
+    }
+
+    .badge-sandbox {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+
+    .card h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.32rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .card p {
+      font-size: 0.88rem;
+      color: #475569;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s ease;
+    }
+
+    .btn:hover { opacity: 0.9; }
+
+    .btn-dark {
+      background: #0f172a;
+      color: #ffffff;
+    }
+
+    .btn-sim {
+      background: #1d4ed8;
+      color: #ffffff;
+    }
+
+    /* MODALS */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .guide-modal {
+      background: #ffffff;
+      border-radius: 20px;
+      max-width: 700px;
+      width: 100%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+    }
+
+    .modal-header {
+      padding: 20px 26px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-header h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      color: #000000;
+    }
+
+    .close-btn {
+      background: #f1f5f9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.15rem;
+      color: #0f172a;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .modal-body {
+      padding: 22px 26px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .engine-highlight {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 16px 18px;
+      color: #000000;
+      font-size: 0.87rem;
+      line-height: 1.6;
+    }
+
+    .engine-highlight strong {
+      color: #000000;
+    }
+
+    .guide-step {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 15px 18px;
+    }
+
+    .step-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .step-num {
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    .step-title {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: #000000;
+    }
+
+    .guide-step p {
+      font-size: 0.84rem;
+      color: #475569;
+      line-height: 1.55;
+    }
+
+    #engineBackdrop .guide-step p {
+      color: #000000;
+    }
+
+    .guide-step code {
+      background: #e2e8f0;
+      color: #0f172a;
+      padding: 1px 6px;
+      border-radius: 5px;
+      font-size: 0.8rem;
+    }
+
+    .modal-footer {
+      padding: 16px 26px;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    @media (max-width: 760px) {
+      .topbar { padding: 18px 20px; }
+      .portal-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a href="/" class="brand-logo">
+      <div class="brand-mark">FS</div>
+      <span class="brand-title">FraudShield-Pro <span>Engine</span></span>
+    </a>
+    <div class="topbar-actions">
+      <button type="button" id="openEngineBtn" class="guide-btn">Know About FS Engine</button>
+      <button type="button" id="openGuideBtn" class="guide-btn">Know How to Test</button>
+    </div>
+  </header>
+
+  <main class="main-wrap">
+    <section class="hero">
+      <h1>Intercept Fraud Before Money Ever Moves</h1>
+      <p class="hero-quote">
+        “Every suspicious transaction caught in real time—giving analysts total clarity and control from a single command center.”
+      </p>
+      <p class="hero-desc">
+        Open the Analyst Dashboard to monitor live risk verdicts and investigate threats, or use the Payment Simulator to test how the detection engine responds.
+      </p>
+    </section>
+
+    <section class="portal-grid">
+      <!-- PRIMARY: ANALYST SOC -->
+      <div class="card card-featured">
+        <div>
+          <div class="card-top">
+            <div class="icon-box icon-soc">SOC</div>
+            <span class="role-badge badge-core">Core Engine</span>
+          </div>
+          <h2>Bank Analyst SOC Portal</h2>
+          <p>
+            The command center of FraudShield-Pro. Monitor live risk scores, trace linked fraud networks, track suspicious devices, review case investigations, and manage detection rules.
+          </p>
+        </div>
+        <a href="/analyst" class="btn btn-dark">Launch Analyst Dashboard →</a>
+      </div>
+
+      <!-- SECONDARY: LIVE TESTING SANDBOX -->
+      <div class="card">
+        <div>
+          <div class="card-top">
+            <div class="icon-box icon-sim">₹</div>
+            <span class="role-badge badge-sandbox">Live Test Sandbox</span>
+          </div>
+          <h2>Live Payment Simulator</h2>
+          <p>
+            An interactive sandbox built strictly to test the FraudShield-Pro Engine. Send simulated transfers or run preset fraud scenarios to trigger warnings, Step-Up OTPs, and automatic blocks in real time.
+          </p>
+        </div>
+        <a href="/customer" class="btn btn-sim">Open Payment Sandbox →</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL 1: KNOW ABOUT FS ENGINE -->
+  <div id="engineBackdrop" class="modal-backdrop">
+    <div class="guide-modal" role="dialog" aria-modal="true" aria-labelledby="engineTitle">
+      <div class="modal-header">
+        <h3 id="engineTitle">About FraudShield-Pro Engine</h3>
+        <button type="button" id="closeEngineBtn" class="close-btn" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="engine-highlight">
+          <strong>Built for Bank Servers:</strong> This website exists primarily to demonstrate and deliver the <strong>FraudShield-Pro Engine</strong>—a modular, real-time fraud detection core designed so <strong>any bank server or payment gateway</strong> can plug it directly into their transaction pipeline to score, pause, or block fraudulent activity before settlement. The Live Payment Simulator is included solely as a testing harness to watch the engine work in real time.
+        </div>
+
+        <div class="guide-step">
+          <div class="step-head">
+            <span class="step-num">Layer 1</span>
+            <span class="step-title">Weighted Hybrid Risk Engine (ML + Behavioral + Velocity)</span>
+          </div>
+          <p>
+            Every transaction is scored out of 100 across four weighted domains: <strong>40% Machine Learning</strong> (30-tree Random Forest trained on historical fraud datasets + live resolved cases), <strong>25% Behavioral Anomalies</strong> (cold-start-safe Z-score spending spikes, odd hours, high balance depletion), <strong>15% Velocity &amp; Structuring</strong> (1-minute bursts and micro-transaction sweeps), and <strong>20% Device &amp; Network Intelligence</strong> (VPNs, foreign geo, impossible travel).
+          </p>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-head">
+            <span class="step-num">Layer 2</span>
+            <span class="step-title">Graph Intelligence &amp; Money Mule Detection</span>
+          </div>
+          <p>
+            Builds a live entity-relationship network connecting accounts, devices, and fund transfers. Automatically detects <strong>Shared-Device Fraud Rings</strong>, <strong>Money Mule Collectors (Fan-In)</strong>, <strong>Rapid Distributors (Fan-Out)</strong>, and <strong>Circular Transfer Loops</strong> using graph traversal.
+          </p>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-head">
+            <span class="step-num">Layer 3</span>
+            <span class="step-title">Account Takeover (ATO) &amp; Device Reputation</span>
+          </div>
+          <p>
+            Tracks device trust profiles over time and detects suspicious session sequences—such as consecutive failed logins, unfamiliar devices, immediate high-value transfers right after login, or transfers immediately following a password change or new beneficiary addition. Severe ATO events trigger automatic, reversible 15-minute payment cooldowns.
+          </p>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-head">
+            <span class="step-num">Layer 4</span>
+            <span class="step-title">ScamShield Pre-Payment Protection</span>
+          </div>
+          <p>
+            Runs before a transfer is even submitted to catch authorized push-payment (APP) scams—warning customers about urgency or social-engineering keywords, newly added recipients, unusually large amounts, or abnormal recipient activity.
+          </p>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-head">
+            <span class="step-num">Layer 5</span>
+            <span class="step-title">AI Investigator (Explainable AI) &amp; Self-Learning Loop</span>
+          </div>
+          <p>
+            Provides bank analysts with SHAP-style risk attribution bars, plain-English investigation briefs, counterfactual ("What-If") explanations, and downloadable <strong>SAR (Suspicious Activity Report)</strong> dossiers. Every analyst decision (Confirm Fraud or False Positive) feeds back into the engine's watchlist, device reputation, and chronological 80/20 benchmarked ML retraining pipeline.
+          </p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="doneEngineBtn" class="btn btn-dark" style="width:auto;padding:10px 24px;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: KNOW HOW TO TEST -->
+  <div id="guideBackdrop" class="modal-backdrop">
+    <div class="guide-modal" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+      <div class="modal-header">
+        <h3 id="guideTitle">How to Test FraudShield-Pro Engine</h3>
+        <button type="button" id="closeGuideBtn" class="close-btn" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="guide-step">
+          <div class="step-head">
+            <span class="step-num">Step 1</span>
+            <span class="step-title">Create Two Test Accounts (Sender &amp; Recipient)</span>
+          </div>
+          <p>
+            Open <strong>Payment Sandbox</strong> and register Account A (starts with <code>₹50,000</code>). Then open an <strong>Incognito Window</strong>, visit the Payment Sandbox, and register Account B. Copy Account B's <code>FSP-XXXXXXXX</code> number.
+          </p>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-head">
+            <span class="step-num">Step 2</span>
+            <span class="step-title">Test a Safe Transfer &amp; ScamShield Warnings</span>
+          </div>
+          <p>
+            In Account A, go to <strong>Send Money</strong>, paste Account B's number, enter <code>₹1,000</code> under <code>Groceries / Food</code>, and test a normal transfer. To trigger <strong>ScamShield</strong>, type urgency keywords like <code>Urgent KYC refund</code> or <code>Police fine</code> in the Note field before sending.
+          </p>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-head">
+            <span class="step-num">Step 3</span>
+            <span class="step-title">Stress-Test Presets in the Transaction Simulator Tab</span>
+          </div>
+          <p>
+            Inside the <strong>Payment Sandbox</strong>, click the <strong>Transaction Simulator</strong> tab. Use the one-click <code>Safe Preset</code>, <code>Suspicious Preset</code>, <code>High-Risk Fraud</code>, and <code>Fraud Ring</code> buttons (or enter custom amounts, hours, VPNs, and countries) and click <strong>Run Engine Evaluation</strong> to see instant verdicts.
+          </p>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-head">
+            <span class="step-num">Step 4</span>
+            <span class="step-title">Test Account Takeover (ATO) Alerts</span>
+          </div>
+          <p>
+            Sign out of Account A and enter the wrong password <strong>3 times</strong>, then sign in with the right password. Open <strong>Security Center</strong> to view the logged suspicious login alert.
+          </p>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-head">
+            <span class="step-num">Step 5</span>
+            <span class="step-title">Investigate Everything in the Bank Analyst SOC Portal</span>
+          </div>
+          <p>
+            Open <strong>Bank Analyst SOC Portal</strong> and register an analyst account. Inspect live KPIs and charts, click nodes in the <strong>Fraud Network Graph</strong> (especially after running the Fraud Ring preset), review <strong>ATO &amp; Device Intel</strong>, and click <strong>Investigate</strong> in the Audit Log to view risk breakdowns, resolve cases, and download SAR reports.
+          </p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="doneGuideBtn" class="btn btn-dark" style="width:auto;padding:10px 24px;">Got It</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const engineBackdrop = document.getElementById('engineBackdrop');
+    const guideBackdrop = document.getElementById('guideBackdrop');
+
+    function closeAllModals() {
+      engineBackdrop.classList.remove('open');
+      guideBackdrop.classList.remove('open');
+    }
+
+    document.getElementById('openEngineBtn').onclick = () => engineBackdrop.classList.add('open');
+    document.getElementById('closeEngineBtn').onclick = closeAllModals;
+    document.getElementById('doneEngineBtn').onclick = closeAllModals;
+
+    document.getElementById('openGuideBtn').onclick = () => guideBackdrop.classList.add('open');
+    document.getElementById('closeGuideBtn').onclick = closeAllModals;
+    document.getElementById('doneGuideBtn').onclick = closeAllModals;
+
+    engineBackdrop.onclick = (e) => { if (e.target === engineBackdrop) closeAllModals(); };
+    guideBackdrop.onclick = (e) => { if (e.target === guideBackdrop) closeAllModals(); };
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAllModals();
+    });
+  </script>
+</body>
+</html>
